@@ -20,9 +20,45 @@ const rollDice = () => {
     diceValuesArr = [];
     for (let i=0; i < 5; i++) {
         const randomDice = Math.floor(Math.random()*6 + 1);
+        diceValuesArr.push(randomDice);
     }
+    listOfAllDice.forEach((dice, index)=> {
+        dice.textContent = diceValuesArr[index];
+    });
 }
 
+const updateStats = () => {
+    currentRoundRollsText.textContent = rolls;
+    currentRoundText.textContent = round;
+}
+
+const updateRadioOption = (optionNode, score) => {
+    scoreInputs[optionNode].disabled = false; 
+    scoreInputs[optionNode].value = score;
+    scoreSpans[optionNode].textContent = `, score = ${score}`;
+}
+
+const getHighestDuplicates = (arr) => {
+    const counts = {};
+    for (const num of arr) {
+        if (counts[num]) {
+            counts[num]++;
+        } else {
+            counts[num] = 1;
+        }
+    }
+    let highestCount = 0;
+    for (const num of arr) {
+        const count = counts[num];
+        if (count >= 3 && count > highestCount) {
+            highestCount = count;
+        }
+        if (count >= 4 && count > highestCount) {
+            highestCount = count;
+        }
+    }
+    const sumOfAllDice = diceValuesArr.reduce((a,b) => a + b, 0);
+};
 
 rulesBtn.addEventListener("click", ()=>{
     isModalShowing = !isModalShowing;
@@ -32,6 +68,16 @@ rulesBtn.addEventListener("click", ()=>{
     } else {
         rulesBtn.textContent = "Show Rules";
         rulesContainer.style.display = "none";
+    }
+});
+
+rollDiceBtn.addEventListener("click", () => {
+    if (rolls === 3) {
+        alert("You have made three rolls this round.  Please select a score.")
+    } else {
+        rolls++;
+        rollDice();
+        updateStats();
     }
 });
 
